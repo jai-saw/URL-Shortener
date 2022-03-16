@@ -17,7 +17,7 @@
                 <h1>URL Shortener</h1>
                 <form method="post" action="{{ url_for('url.create') }}">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Long URL" name="url" required>
+                        <input type="url" class="form-control" placeholder="Long URL" name="url" required>
                         <button class="btn btn-secondary" type="submit" style="background-color: #610F7F">Shorten!
                         </button>
                     </div>
