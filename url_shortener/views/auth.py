@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
-from url_shortener.models import User
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from url_shortener.models import User, Url
 from url_shortener.db import db
 from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -23,6 +23,13 @@ def login():
             flash("Invalid password!", "danger")
             return redirect(url_for("auth.login"))
 
+        if session.get("logged_out_links"):
+            flattened_list = [link[1] for link in session.get("logged_out_links")]
+            db.session.query(Url).filter(Url.shortened_id.in_(flattened_list)).update({"user_id": user.id})
+            db.session.commit()
+
+            session.pop("logged_out_links")
+
         login_user(user)
         next_url = request.args.get("next")
         return redirect(next_url or url_for("main.index"))
@@ -38,6 +45,11 @@ def register():
 
         if not username or not password:
             flash("Invalid login info!", "danger")
+            return redirect(url_for("auth.register"))
+
+        user = User.query.filter_by(username=username).first()
+        if user:
+            flash("A user with that username already exists!!", "danger")
             return redirect(url_for("auth.register"))
 
         user = User(
