@@ -13,6 +13,7 @@ if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
 app.config.update(
+    SECRET_KEY=os.environ.get("SECRET_KEY", os.urandom(6)),
     SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI,
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 )
