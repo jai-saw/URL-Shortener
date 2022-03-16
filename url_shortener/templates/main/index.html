@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hello World!</h1>
+    <div class="container-flex vh-100" style="background-color: #9B7EDE">
+        <div class="d-flex align-items-center justify-content-center vh-100">
+            <div class="text-center p-5 bg-white shadow-lg rounded w-25">
+                <h1>URL Shortener</h1>
+                <form method="post" action="{{ url_for('url.create') }}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Long URL" name="url" required>
+                        <button class="btn btn-secondary" type="submit" style="background-color: #610F7F">Shorten!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

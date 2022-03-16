@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, request, redirect, url_for
 from datetime import date
 from url_shortener.db import db
 from url_shortener.models import Url
@@ -21,4 +21,4 @@ def create():
     created_url = Url(original_url=long_url, shortened_id=id, created_on=date.today())
     db.session.add(created_url)
     db.session.commit()
-    return render_template("main/index.html")
+    return redirect(url_for("main.index"))
