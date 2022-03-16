@@ -12,4 +12,4 @@ class Url(db.Model):
     original_url = db.Column(db.String, nullable=False)
     shortened_id = db.Column(db.String, nullable=False)
     created_on = db.Column(db.Date, nullable=False)
-    clicks = db.Column(db.Integer, nullable=False)
+    clicks = db.Column(db.Integer, nullable=False, default=0)
