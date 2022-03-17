@@ -1,0 +1,16 @@
+asgiref==3.5.0
+click==8.0.4
+decorator==5.1.1
+Django==4.0.3
+Flask==2.0.3
+Flask-Login==0.5.0
+Flask-SQLAlchemy==2.5.1
+gunicorn==20.1.0
+itsdangerous==2.1.1
+Jinja2==3.0.3
+MarkupSafe==2.1.1
+six==1.16.0
+SQLAlchemy==1.4.32
+sqlparse==0.4.2
+validators==0.18.2
+Werkzeug==2.0.3
