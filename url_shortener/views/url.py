@@ -6,7 +6,7 @@ from flask import Blueprint, request, redirect, url_for, flash, session
 from datetime import date
 from url_shortener.db import db
 from url_shortener.models import Url
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 url = Blueprint("url", __name__, url_prefix="/urls")
 
@@ -34,4 +34,20 @@ def create():
     db.session.commit()
 
     flash(f"Created URL: {request.url_root + url_id}", "success")
+    return redirect(url_for("main.index"))
+
+
+@url.route("/<string:url_id>/delete/", methods=["POST"])
+@login_required
+def delete(url_id):
+    query = Url.query.filter_by(shortened_id=url_id, user_id=current_user.id)
+    url = query.first()
+    if not url:
+        flash("Invalid short link!", "danger")
+        return redirect(url_for("main.index"))
+
+    query.delete()
+    db.session.commit()
+
+    flash("Link removed!", "success")
     return redirect(url_for("main.index"))

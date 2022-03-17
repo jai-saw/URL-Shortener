@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container-flex vh-100" style="background-color: #9B7EDE">
         <div class="d-flex align-items-center justify-content-center vh-100">
-            <div class="text-center p-5 bg-white shadow-lg rounded w-25">
+            <div class="p-5 bg-white shadow-lg rounded" style="min-width: 25%">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -14,7 +14,7 @@
                     {% endif %}
                 {% endwith %}
 
-                <h1>URL Shortener</h1>
+                <h1 class="text-center">URL Shortener</h1>
                 <form method="post" action="{{ url_for('url.create') }}">
                     <div class="input-group">
                         <input type="url" class="form-control" placeholder="Long URL" name="url" required>
@@ -22,6 +22,54 @@
                         </button>
                     </div>
                 </form>
+                <div class="table-responsive">
+
+                    <table class="table mt-2">
+                        <thead>
+                        <tr>
+                            <th scope="col">Long Url</th>
+                            <th scope="col">Short Url</th>
+                            {% if current_user.is_authenticated %}
+                                <th scope="col">Views</th>
+                                <th scope="col">Actions</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if current_user.is_authenticated %}
+                            {% for url in current_user.urls %}
+                                <tr>
+                                    <td>{{ url.original_url }}</td>
+                                    <td>{{ request.base_url + url.shortened_id }}</td>
+                                    <td>{{ url.clicks }}</td>
+
+                                    <td>
+                                        <form action="{{ url_for('url.delete', url_id=url.shortened_id) }}"
+                                              method="post">
+                                            <button type="submit" class="btn btn-sm"
+                                                    style="color: #610F7F; border-color: #610F7F">Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="bg-light">
+                                <td colspan="2" class="border-0"><a href="{{ url_for('auth.login') }}">Login</a> to save
+                                    and
+                                    track your urls!
+                                </td>
+                            </tr>
+                            {% for long_url, url_id in session["logged_out_links"] %}
+                                <tr>
+                                    <td>{{ long_url }}</td>
+                                    <td>{{ request.base_url + url_id }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
