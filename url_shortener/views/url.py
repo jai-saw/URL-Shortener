@@ -1,5 +1,6 @@
 import random
 import string
+import validators
 
 from flask import Blueprint, request, redirect, url_for, flash, session
 from datetime import date
@@ -12,8 +13,11 @@ url = Blueprint("url", __name__, url_prefix="/urls")
 
 @url.route("/", methods=["POST"])
 def create():
-    # TODO: Add custom form validation (or use WTForms)
     long_url = request.form.get("url")
+
+    if not long_url or not validators.url(long_url):
+        flash("A valid URL is required!", "danger")
+        return redirect(url_for("main.index"))
 
     url_id = "".join(random.choice(string.digits + string.ascii_letters) for _ in range(0, 6))
 
