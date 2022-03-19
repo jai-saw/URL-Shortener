@@ -11,6 +11,10 @@ from flask_login import current_user, login_required
 url = Blueprint("url", __name__, url_prefix="/urls")
 
 
+def generate_id():
+    return "".join(random.choice(string.digits + string.ascii_letters) for _ in range(0, 6))
+
+
 @url.route("/", methods=["POST"])
 def create():
     long_url = request.form.get("url")
@@ -19,7 +23,9 @@ def create():
         flash("A valid URL is required!", "danger")
         return redirect(url_for("main.index"))
 
-    url_id = "".join(random.choice(string.digits + string.ascii_letters) for _ in range(0, 6))
+    url_id = generate_id()
+    while Url.query.filter_by(shortened_id=url_id).first():
+        url_id = generate_id()
 
     user_id = current_user.id if current_user.is_authenticated else None
     if not user_id:
